@@ -1,1 +1,1 @@
-# Trade-Auf-Universe
+# Project documentation
