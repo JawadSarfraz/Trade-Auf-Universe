@@ -1,8 +1,6 @@
-# Entry point of the application
 import os
 import json
 from api.mexc_spot_api import fetch_spot_order_book
-from api.mexc_futures_api import fetch_futures_order_book
 
 def save_data(exchange, market_type, symbol, data):
     """
@@ -10,8 +8,8 @@ def save_data(exchange, market_type, symbol, data):
     
     Args:
         exchange (str): The exchange name (e.g., mexc).
-        market_type (str): Either 'spot' or 'futures'.
-        symbol (str): The trading pair (e.g., BTCUSDT or BTC_USDT).
+        market_type (str): Either 'spot'.
+        symbol (str): The trading pair (e.g., BTCUSDT).
         data (dict): The scraped data.
     """
     base_path = f"data/raw/{exchange}/{market_type}/"
@@ -41,12 +39,8 @@ def main():
         spot_data = fetch_spot_order_book(symbol=symbol, limit=100)
         if spot_data:
             save_data(exchange, "spot", symbol, spot_data)
-        
-        print(f"Fetching futures order book for {symbol} from {exchange}...")
-        futures_symbol = symbol.replace("USDT", "_USDT")  # Adjust symbol for futures
-        futures_data = fetch_futures_order_book(symbol=futures_symbol, limit=100)
-        if futures_data:
-            save_data(exchange, "futures", futures_symbol, futures_data)
+        else:
+            print(f"Failed to fetch spot data for {symbol}.")
     
     print("Scraping complete. Data has been saved.")
 
